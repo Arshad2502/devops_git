@@ -1,2 +1,6 @@
+
 hi this is a practice file to learn github
 learn linux
+
+hi this is a practice file to learn git repositoy
+
