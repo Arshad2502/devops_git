@@ -1,1 +1,3 @@
 hello namaste
+world is beautiful
+yes it is
