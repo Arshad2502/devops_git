@@ -1,6 +1,6 @@
 ---
 - name: Deploy WAR to Tomcat
-  hosts: tomcat_servers
+  hosts: local
   become: yes
   vars:
     war_source: "/var/lib/jenkins/workspace/pipeline/devops_login/target/devops_login-0.0.1-SNAPSHOT.war"
