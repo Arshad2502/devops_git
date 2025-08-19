@@ -21,4 +21,6 @@
         mode: '0755'
 
     - name: Start Tomcat
+      become: yes
+      become_user: arshad
       shell: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/startup.sh"
