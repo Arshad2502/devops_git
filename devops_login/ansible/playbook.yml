@@ -17,7 +17,7 @@
 
     - name: Make Tomcat scripts executable
       file:
-        path: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/{{ item }}"
+        path: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/startup.sh"
         mode: '0755'
 
     - name: Start Tomcat
