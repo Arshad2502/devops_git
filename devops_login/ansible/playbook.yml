@@ -1,7 +1,7 @@
 ---
 - name: Deploy WAR to Tomcat
   hosts: local
-  gather_facts: no
+  gather_facts: yes
   become: yes
   become_user: arshad   
 
