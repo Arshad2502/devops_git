@@ -1,9 +1,10 @@
 ---
 - name: Deploy WAR to Tomcat
   hosts: local
+  become: yes
   
   vars:
-    war_source: "/var/lib/jenkins/workspace/pipeline/devops_login/target/devops_login-0.0.1-SNAPSHOT.war"
+    war_source: "/var/lib/jenkins/workspace/to practice task/devops_login/target/devops_login-0.0.1-SNAPSHOT.war"
     tomcat_webapps: "/home/arshad/tomcat1/apache-tomcat-9.0.105/webapps/"
   tasks:
     - name: Copy WAR file to Tomcat webapps
