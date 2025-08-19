@@ -1,7 +1,6 @@
 ---
 - name: Deploy WAR to Tomcat
   hosts: local
-  become: yes
   gather_facts: no
   
   vars:
@@ -29,3 +28,5 @@
 
     - name: Start Tomcat
       shell: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/startup.sh"
+      async: 10
+      poll: 0
