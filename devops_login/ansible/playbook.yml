@@ -16,6 +16,8 @@
         remote_src: yes
 
     - name: Make Tomcat scripts executable
+      become: yes
+      become_user: arshad   
       file:
         path: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/startup.sh"
         mode: '0755'
