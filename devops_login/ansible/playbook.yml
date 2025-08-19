@@ -2,6 +2,7 @@
 - name: Deploy WAR to Tomcat
   hosts: local
   become: yes
+  gather_facts: no
   
   vars:
     war_source: "/var/lib/jenkins/workspace/to practice task/devops_login/target/devops_login-0.0.1-SNAPSHOT.war"
