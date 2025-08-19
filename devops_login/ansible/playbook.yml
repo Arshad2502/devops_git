@@ -2,10 +2,11 @@
 - name: Deploy WAR to Tomcat
   hosts: local
   gather_facts: no
-  
+
   vars:
     war_source: "/var/lib/jenkins/workspace/ansiblesonartask/devops_login/devops_login/target/devops_login-0.0.2-SNAPSHOT.war"
     tomcat_webapps: "/home/arshad/tomcat1/apache-tomcat-9.0.105/webapps/"
+
   tasks:
     - name: Copy WAR file to Tomcat webapps
       copy:
@@ -18,14 +19,6 @@
       file:
         path: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/{{ item }}"
         mode: '0755'
-      loop:
-        - startup.sh
-        - shutdown.sh
-
-    - name: Stop Tomcat (if running)
-      shell: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/shutdown.sh"
-      ignore_errors: yes
 
     - name: Start Tomcat
       shell: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/startup.sh"
-      
