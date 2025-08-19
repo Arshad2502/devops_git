@@ -5,7 +5,7 @@
   gather_facts: no
   
   vars:
-    war_source: "/var/lib/jenkins/workspace/ansiblesonartask/devops_login/target/devops_login-0.0.1-SNAPSHOT.war"
+    war_source: "/var/lib/jenkins/workspace/ansiblesonartask/devops_login/devops_login/target/devops_login-0.0.2-SNAPSHOT.war"
     tomcat_webapps: "/home/arshad/tomcat1/apache-tomcat-9.0.105/webapps/"
   tasks:
     - name: Copy WAR file to Tomcat webapps
