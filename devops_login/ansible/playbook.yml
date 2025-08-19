@@ -21,8 +21,5 @@
         mode: '0755'
 
     - name: Start Tomcat
-      become: yes
-      become_user: arshad
-      shell: "/home/arshad/tomcat1/apache-tomcat-9.0.105/bin/startup.sh"
-      async: 30
-      poll: 0
+      shell: "nohup /home/arshad/tomcat1/apache-tomcat-9.0.105/bin/startup.sh > /home/arshad/tomcat1/catalina.out 2>&1 &""
+      
