@@ -13,6 +13,7 @@
         src: "{{ war_source }}"
         dest: "{{ tomcat_webapps }}/"
         mode: 0644
+        remote_src: yes
 
     - name: Make Tomcat scripts executable
       file:
