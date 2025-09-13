@@ -5,35 +5,52 @@ pool:
   name: 'batch11'
 
 steps:
+# 1. Checkout repo
 - checkout: self
-  fetchDepth: 0
+  fetchDepth: 0   # Required for SonarQube SCM info
 
+# 2. Prepare SonarQube analysis
 - task: SonarQubePrepare@7
+  displayName: 'Prepare analysis on SonarQube Server'
   inputs:
-    SonarQube: 'sonarqubeconnection'
+    SonarQube: 'sonarqubeconnection'   # Your SonarQube service connection
     scannerMode: 'Other'
     extraProperties: |
       sonar.projectKey=devops_login
       sonar.projectName=devops_login
 
-- task: Maven@3
+# 3. Remove sonar.branch.name (Linux) to avoid Community Edition error
+- script: |
+    params="${SONARQUBE_SCANNER_PARAMS}"
+    params=$(echo "$params" | sed -E 's/"sonar.branch.name":"[a-zA-Z0-9/_\.-]*",?//g')
+    echo "##vso[task.setvariable variable=SONARQUBE_SCANNER_PARAMS]$params"
+  displayName: 'Remove sonar.branch.name for Community Edition (Linux)'
+
+# 4. Maven build + SonarQube scan
+- task: Maven@4
+  displayName: 'Maven Build and SonarQube Analysis'
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
     goals: 'clean verify sonar:sonar'
-    options: '-X -e' 
     publishJUnitResults: true
 
+# 5. Publish SonarQube Quality Gate result
 - task: SonarQubePublish@7
+  displayName: 'Publish SonarQube Quality Gate'
   inputs:
     pollingTimeoutSec: '300'
 
+# 6. Copy WAR to staging directory
 - task: CopyFiles@2
+  displayName: 'Copy WAR to staging directory'
   inputs:
     SourceFolder: 'devops_login/target'
     Contents: '**/*.war'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+# 7. Publish WAR artifact
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish WAR Artifact'
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
