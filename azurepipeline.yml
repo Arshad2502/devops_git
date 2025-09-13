@@ -1,4 +1,5 @@
-trigger: none
+trigger:
+- main   # only run on main branch
 
 pool:
   name: 'batch11'
@@ -23,7 +24,7 @@ steps:
     mavenPomFile: 'devops_login/pom.xml'
     goals: 'clean verify'
     publishJUnitResults: true
-    sonarQubeRunAnalysis: true   # <---- this triggers sonar:sonar automatically
+    sonarQubeRunAnalysis: true   # triggers sonar:sonar automatically
 
 # 4. Publish SonarQube Quality Gate
 - task: SonarQubePublish@7
