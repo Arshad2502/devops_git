@@ -18,11 +18,11 @@ steps:
 - task: Maven@4
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
-    goals: 'clean package'
+    goals: 'clean verify sonar:sonar'
     publishJUnitResults: true
 
-# 3. Publish SonarQube Quality Gate Result
-- task: SonarQubePublish@5
+# 3. Publish SonarQube Quality Gate Result (use version 7)
+- task: SonarQubePublish@7
   inputs:
     pollingTimeoutSec: '300'
 
