@@ -5,7 +5,7 @@ pool:
 
 steps:
 # 1. Prepare SonarQube Analysis
-- task: SonarQubePrepare@5
+- task: SonarQubePrepare@7
   inputs:
     SonarQube: 'sonarqubeconnection'   # service connection name
     scannerMode: 'Other'
@@ -14,29 +14,26 @@ steps:
     cliProjectName: 'devops_login'
     cliSources: 'devops_login'
 
-# 2. Run Maven build + tests
+# 2. Run Maven build + Sonar scan
 - task: Maven@4
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
-    goals: 'clean verify'
+    goals: 'clean verify sonar:sonar'
     publishJUnitResults: true
 
-# 3. Run SonarQube Analysis
-- task: SonarQubeAnalyze@5
-
-# 4. Publish SonarQube Quality Gate Result
+# 3. Publish SonarQube Quality Gate Result
 - task: SonarQubePublish@5
   inputs:
     pollingTimeoutSec: '300'
 
-# 5. Copy WAR to staging
+# 4. Copy WAR to staging
 - task: CopyFiles@2
   inputs:
     SourceFolder: 'devops_login/target'
     Contents: '**/*.war'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# 6. Publish WAR as artifact
+# 5. Publish WAR as artifact
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
