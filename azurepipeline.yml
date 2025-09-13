@@ -20,6 +20,7 @@ steps:
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
     goals: 'clean verify sonar:sonar'
+    options: '-X -e' 
     publishJUnitResults: true
 
 - task: SonarQubePublish@7
