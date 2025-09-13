@@ -16,7 +16,7 @@ steps:
       sonar.projectKey=devops_login
       sonar.projectName=devops_login
 
-- task: Maven@4
+- task: Maven@3
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
     goals: 'clean verify sonar:sonar'
