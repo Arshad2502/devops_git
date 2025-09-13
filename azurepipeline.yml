@@ -1,0 +1,27 @@
+trigger: none
+
+pool:
+  name: 'batch11' 
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean package'
+    publishJUnitResults: true
+
+# Copy WAR to staging
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'devops_login/target'
+    Contents: '**/*.war'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# Publish WAR as artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'drop'
+    publishLocation: 'Container'
+
+
