@@ -1,27 +1,44 @@
 trigger: none
 
 pool:
-  name: 'batch11' 
+  name: 'batch11'
 
 steps:
+# 1. Prepare SonarQube Analysis
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'sonarqubeconnection'   # service connection name
+    scannerMode: 'Other'
+    configMode: 'manual'
+    cliProjectKey: 'devops_login'
+    cliProjectName: 'devops_login'
+    cliSources: 'devops_login'
+
+# 2. Run Maven build + tests
 - task: Maven@4
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
-    goals: 'clean package'
+    goals: 'clean verify'
     publishJUnitResults: true
 
-# Copy WAR to staging
+# 3. Run SonarQube Analysis
+- task: SonarQubeAnalyze@5
+
+# 4. Publish SonarQube Quality Gate Result
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
+
+# 5. Copy WAR to staging
 - task: CopyFiles@2
   inputs:
     SourceFolder: 'devops_login/target'
     Contents: '**/*.war'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# Publish WAR as artifact
+# 6. Publish WAR as artifact
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
     publishLocation: 'Container'
-
-
