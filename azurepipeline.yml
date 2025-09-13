@@ -1,44 +1,37 @@
 trigger:
-- main   # only run on main branch
+- main
 
 pool:
   name: 'batch11'
 
 steps:
-# 1. Checkout repo
 - checkout: self
-  fetchDepth: 0   # disable shallow fetch so SCM info is available to SonarQube
+  fetchDepth: 0
 
-# 2. Prepare SonarQube analysis
 - task: SonarQubePrepare@7
   inputs:
-    SonarQube: 'sonarqubeconnection'   # your service connection name
+    SonarQube: 'sonarqubeconnection'
     scannerMode: 'Other'
     extraProperties: |
       sonar.projectKey=devops_login
       sonar.projectName=devops_login
 
-# 3. Maven build + SonarQube scan (integrated)
 - task: Maven@4
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
-    goals: 'clean verify'
+    goals: 'clean verify sonar:sonar'
     publishJUnitResults: true
-    sonarQubeRunAnalysis: true   # triggers sonar:sonar automatically
 
-# 4. Publish SonarQube Quality Gate
 - task: SonarQubePublish@7
   inputs:
     pollingTimeoutSec: '300'
 
-# 5. Copy WAR to staging
 - task: CopyFiles@2
   inputs:
     SourceFolder: 'devops_login/target'
     Contents: '**/*.war'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# 6. Publish WAR as artifact
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
