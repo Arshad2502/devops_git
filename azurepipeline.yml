@@ -4,7 +4,7 @@ pool:
   name: 'batch11' 
 
 steps:
-- task: Maven@3
+- task: Maven@4
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
     goals: 'clean package'
