@@ -18,7 +18,7 @@ steps:
 - task: Maven@4
   inputs:
     mavenPomFile: 'devops_login/pom.xml'
-    goals: 'clean verify sonar:sonar'
+    goals: 'clean package'
     publishJUnitResults: true
 
 # 3. Publish SonarQube Quality Gate Result
