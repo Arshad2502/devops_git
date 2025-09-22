@@ -1,35 +1,14 @@
-# -------------------------
-# Step 1: Build WAR with Maven
-# -------------------------
-FROM maven:3.9.4-eclipse-temurin-8 AS builder
+# Use Maven with JDK 17
+FROM maven:3.9.4-eclipse-temurin-17
 
 # Set working directory
 WORKDIR /app
 
-# Copy Maven repository from host (pre-downloaded dependencies)
-# Make sure you have run 'mvn clean package -DskipTests' on host at least once
-COPY .m2 /root/.m2
-
-# Copy project files
+# Copy the project files
 COPY pom.xml .
 COPY src ./src
 
-# Build WAR without downloading anything
-RUN mvn clean package -DskipTests -o
+# Build the WAR file
+RUN mvn clean package -DskipTests
 
-# -------------------------
-# Step 2: Deploy WAR to Tomcat
-# -------------------------
-FROM tomcat:9.0.79-jdk8
-
-# Clean default webapps
-RUN rm -rf /usr/local/tomcat/webapps/*
-
-# Copy WAR from builder stage
-COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
-
-# Expose Tomcat port
-EXPOSE 8080
-
-# Start Tomcat
-CMD ["catalina.sh", "run"]
+# The WAR will be available at /app/target/*.war
