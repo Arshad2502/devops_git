@@ -5,8 +5,8 @@ FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /app
 
 # Copy Maven files
-COPY pom.xml .
-COPY src ./src
+COPY pom.xml devops_login/
+COPY src devops_login/
 
 # Build the WAR file
 RUN mvn clean package -DskipTests
