@@ -1,23 +1,30 @@
-# Step 1: Build the WAR using Maven
-FROM maven:3.9.4-eclipse-temurin-17 AS builder
+# -------------------------
+# Step 1: Build WAR with Maven
+# -------------------------
+FROM maven:3.9.4-eclipse-temurin-8 AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy Maven files
+# Copy Maven config and source code
 COPY pom.xml .
 COPY src ./src
 
-# Build the WAR file
+# Download dependencies first (helps with network issues in CI)
+RUN mvn dependency:go-offline
+
+# Build WAR (skip tests)
 RUN mvn clean package -DskipTests
 
+# -------------------------
 # Step 2: Deploy WAR to Tomcat
-FROM tomcat:10.1.15-jdk17
+# -------------------------
+FROM tomcat:9.0.79-jdk8
 
-# Remove default Tomcat webapps
+# Clean default webapps
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy WAR from the builder stage
+# Copy WAR from builder stage
 COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
 # Expose Tomcat port
